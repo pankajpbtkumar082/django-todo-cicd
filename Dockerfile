@@ -2,16 +2,13 @@ FROM python:3.11-slim
 
 WORKDIR /data
 
-# 1. Copy the requirements file into the container
-COPY requirements.txt .
-
-# 2. Install Django and all dependencies inside the image
-RUN pip install --no-cache-dir -r requirements.txt
-
-# 3. Copy the rest of your application code
+# 1. Copy all your application code first
 COPY . .
 
-# 4. Now Django is available to run migrations
+# 2. Install Django (and gunicorn if you need a production server) directly
+RUN pip install --no-cache-dir django
+
+# 3. Run migrations now that Django is installed
 RUN python manage.py migrate
 
 EXPOSE 8000
